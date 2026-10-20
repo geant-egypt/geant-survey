@@ -98,7 +98,7 @@ const IMG={tr:"data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAgFBgcGBQ
 
 const faces=[["😍","5","راضي جداً","Very satisfied"],["🙂","4","راضي","Satisfied"],["😐","3","محايد","Neutral"],["🙁","2","غير راضي","Dissatisfied"],["😡","1","غير راضي إطلاقاً","Very bad"]];
 const steps=[
- {k:"branch",t:"choice",ar:"اي فرع جيان قمت بزيارته اليوم ؟",en:"Which Géant branch did you visit today?",opts:[["تريمف / Triumph","تريمف","Triumph","tr"],["الرحاب / Rehab","الرحاب","Rehab","rh"]]},
+ {k:"branch",t:"choice",ar:"اي فرع جيان قمت بزيارته اليوم ؟",en:"Which Géant branch did you visit today?",opts:[["TRIUMPH","TRIUMPH","","tr"],["REHAB","REHAB","","rh"]]},
  {k:"q1",t:"rate",ar:"مدي رضائك عن جودة اقسام الاغذيه الطازجه ؟",en:"How satisfied are you with the quality of the fresh food sections?"},
  {k:"q2",t:"rate",ar:"مدي رضائك عن طريقة العرض وسهولة الوصول الي المنتجات التي تريدها ؟",en:"How satisfied are you with the presentation method and ease of access to the products you want?"},
  {k:"q3",t:"rate",ar:"مدي رضائك عن العروض والاسعار بشكل عام ؟",en:"How satisfied are you with the offers and prices in general?"},
@@ -121,7 +121,7 @@ function render(){
   $("count").textContent=(i+1)+" / "+total;
   $("back").hidden=i===0;
   if(s.t==="choice"){
-    h=head(s)+`<div class="big two">`+s.opts.map(o=>`<button data-v="${esc(o[0])}" class="br ${A[s.k]===o[0]?'sel':''}"><img src="${IMG[o[3]]}" alt="${o[2]}"><span class="nm">${o[1]}<small>${o[2]}</small></span></button>`).join("")+`</div>`;
+    h=head(s)+`<div class="big two">`+s.opts.map(o=>`<button data-v="${esc(o[0])}" class="br ${A[s.k]===o[0]?'sel':''}"><img src="${IMG[o[3]]}" alt="${o[1]}"><span class="nm">${o[1]}</span></button>`).join("")+`</div>`;
   }else if(s.t==="rate"){
     h=head(s)+`<div class="faces">`+faces.map(f=>`<button type="button" class="face ${A[s.k]===f[1]?'sel':''}" data-v="${f[1]}"><span class="e">${f[0]}</span><span class="a">${f[2]}</span><span class="n">${f[3]}</span></button>`).join("")+`</div><div id="noteBox"></div>`;
   }else if(s.t==="yn"){
