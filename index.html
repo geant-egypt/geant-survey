@@ -125,10 +125,10 @@ function render(){
   }else if(s.t==="rate"){
     h=head(s)+`<div class="faces">`+faces.map(f=>`<button type="button" class="face ${A[s.k]===f[1]?'sel':''}" data-v="${f[1]}"><span class="e">${f[0]}</span><span class="a">${f[2]}</span><span class="n">${f[3]}</span></button>`).join("")+`</div><div id="noteBox"></div>`;
   }else if(s.t==="yn"){
-    const v=["نعم","لا"],e=["Yes","No"];
-    h=head(s)+`<div class="yn">`+v.map((x,j)=>`<button data-v="${x} / ${e[j]}" class="${A[s.k]===x+' / '+e[j]?'sel':''}"><span class="emo">${s.emo[j]}</span>${x}<small>${e[j]}</small></button>`).join("")+`</div>`;
+    const v=["Yes","No"];
+    h=head(s)+`<div class="yn">`+v.map(x=>`<button data-v="${x}" class="${A[s.k]===x?'sel':''}">${x}</button>`).join("")+`</div>`;
   }else{
-    const prob=(A.q6||"").startsWith("نعم");
+    const prob=A.q6==="Yes";
     h=`<div class="qt">${prob?"احكيلنا إيه اللي حصل":"إذا كان لديك أي رأي، يرجى تركه هنا."}</div><div class="qe">${prob?"Tell us what happened":"Any opinion or problem? Please leave it here."}</div>`
      +(prob?`<div class="hint">⚠️ قلت إنك واجهت مشكلة، كلامك هيوصل للإدارة ونتابعه. / Your feedback goes straight to management.</div>`:"")
      +`<textarea id="comment" placeholder="اكتب هنا / Write here"></textarea>
