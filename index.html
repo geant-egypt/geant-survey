@@ -158,21 +158,25 @@ stage.addEventListener("click",e=>{
 });
 $("back").onclick=prev;
 
+function send(d){
+  if(!SCRIPT_URL){console.log("Demo mode:",d);return Promise.resolve()}
+  return fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",keepalive:true,headers:{"Content-Type":"text/plain"},body:JSON.stringify(d)});
+}
+function queueSave(d){try{const q=JSON.parse(localStorage.getItem("pendingSurvey")||"[]");q.push(d);localStorage.setItem("pendingSurvey",JSON.stringify(q))}catch(e){}}
+function flushQueue(){try{const q=JSON.parse(localStorage.getItem("pendingSurvey")||"[]");if(!q.length)return;localStorage.removeItem("pendingSurvey");q.forEach(d=>send(d).catch(()=>queueSave(d)))}catch(e){}}
+window.addEventListener("online",flushQueue);flushQueue();
+
 stage.addEventListener("click",async e=>{
   if(e.target.id!=="submit") return;
   const btn=e.target; err.textContent=""; btn.disabled=true;
   let comment=$("comment").value.trim();
   Object.keys(N).forEach(k=>{if(N[k]) comment+=(comment?"\n":"")+"["+k.toUpperCase()+"] "+N[k]});
   const data={timestamp:new Date().toISOString(),branch:A.branch,q1:A.q1,q2:A.q2,q3:A.q3,q4:A.q4,q5:A.q5,q6:A.q6,comment,name:$("name").value.trim(),phone:$("phone").value.trim()};
-  try{
-    if(SCRIPT_URL){await fetch(SCRIPT_URL,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(data)})}
-    else{console.log("Demo mode (no SCRIPT_URL):",data)}
-    $("bar").style.width="100%"; $("count").textContent=total+" / "+total; $("back").hidden=true;
-    stage.innerHTML=`<div class="done"><div class="check">✓</div><h2>شكراً لك!</h2><p>تم استلام ردك بنجاح، رأيك بيساعدنا نتطور.<br><span style="color:var(--mute)">Thank you, your response was received.</span></p></div>`;
-    scrollTo({top:0,behavior:"smooth"});
-  }catch(x){
-    err.textContent="حصلت مشكلة في الإرسال، حاول تاني / Sending failed, please try again"; btn.disabled=false;
-  }
+  // show thank-you immediately, send in background (no waiting on Google Apps Script)
+  $("bar").style.width="100%"; $("count").textContent=total+" / "+total; $("back").hidden=true;
+  stage.innerHTML=`<div class="done"><div class="check">✓</div><h2>شكراً لك!</h2><p>تم استلام ردك بنجاح، رأيك بيساعدنا نتطور.<br><span style="color:var(--mute)">Thank you, your response was received.</span></p></div>`;
+  scrollTo({top:0,behavior:"smooth"});
+  send(data).catch(()=>queueSave(data));
 });
 render();
 </script>
